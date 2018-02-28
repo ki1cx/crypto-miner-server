@@ -11,6 +11,8 @@ numberOfGPUs=8
 minimumHashRate=22
 startingFanSpeed=50
 
+read -ep " please enter your ethereum wallet address: " -i "" ethWalletAddress
+
 projectPath=$(pwd)
 claymorePath=/var/lib/claymore-dual-miner
 
@@ -65,7 +67,6 @@ wget https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v10.0/Cla
 tar -xvf Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.0.-.LINUX.tar.gz
 
 ##setup claymore miner with wallet address
-read -ep " please enter your ethereum wallet address: " -i "" ethWalletAddress
 epoolsFile=epools.txt
 cp $projectPath/templates/$epoolsFile .
 sed -i "s@{{eth_wallet_address}}@$ethWalletAddress@g" $epoolsFile
