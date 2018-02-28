@@ -123,7 +123,7 @@ The GTX 1070s is a clear winner when it comes to mining Ethereum.
 | 1070 | 25 MH/s | 31 MH/s| $399 | $12 |
 | 1080 Ti | 32 MH/s | 36 MH/s| $699 | $19 |
 
-###Controling the fan speed
+### Controling the fan speed
 
 ```bash
 //set fan speed across all GPUs
