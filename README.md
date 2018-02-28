@@ -16,13 +16,28 @@ Tested on Ubuntu 16.04 Server LTS amd64 Xenial Xerus. Setup with [ubuntu-unatten
 
 ## Usage
 
-* Install packages
+* Edit install.sh and customize the following variables
+
+	```bash
+	powerDrawTarget=75
+	temperatureTarget=58
+	memoryTransferRateTarget=$2
+	numberOfGPUs=8
+	minimumHashRate=22
+	startingFanSpeed=50
+	```
+
+* Run install.sh
+
+	This installs all the packages necessary to run the miner, including Nvidia drivers
 	
 	```
 	sudo ./install.sh
 	```
 
 * Install USB Wifi driver and enable
+	
+	If you are using the Wifi adapater mentioned below. This installs the rtl8812AU driver.
 
 	```
 	sudo ./setup_usb_wireless.sh
