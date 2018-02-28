@@ -1,15 +1,16 @@
 #!/bin/bash
 
+## customize values here accordingly
 temperatureTarget=58
 memoryTransferRateTarget=1300
-powerDrawLowerLimit=75
+powerDrawLowerLimit=60
 powerDrawUpperLimit=100
 numberOfGPUs=8
 minimumHashRate=22
 lowHashRateCountThreshold=20
 cannotConnectCountThreshold=5
-claymoreMinerDir=/var/lib/claymore-dual-miner
 
+claymoreMinerDir=/var/lib/claymore-dual-miner
 
 date
 echo ""
@@ -22,6 +23,15 @@ XAUTHORITY=$(ps aux | grep [a]uth | awk '{print $17}')
 export XAUTHORITY
 export DISPLAY=:0
 
+gpuCount=$(nvidia-smi --query-gpu=gpu_name --format=csv,noheader | wc -l)
+
+if [ "$gpuCount" -ne "$numberOfGPUs" ]; then
+  echo "GPU count doesn't match"
+
+	echo "Set proper number of GPUs to detect"
+
+  exit 0
+fi
 
 ##check for GPU errors
 unableToDetermineDevice=$(nvidia-smi | grep "Unable to determine the device handle for" | wc -l)
@@ -39,7 +49,13 @@ fi
 
 ##check for usb wireless adapater errors
 ##reset driver as necessary
-./wirelesscheck.sh >> wirelesscheck.log
+
+
+wirelesscheckScript=wirelesscheck.sh
+if [ -f "$wirelesscheckScript" ]
+then
+	./$wirelesscheckScript >> wirelesscheck.log
+fi
 
 ## fresh reboot... wait until miner comes online
 pid=$(ps aux | grep ethdcrminer64 | grep -v grep | awk '{print $2}')
@@ -49,8 +65,8 @@ if [ -z "$pid" ]; then
 fi
 
 ## check if gpu check is still running
-gpuCheckProcesses=$(ps aux | grep [g]pucheck.sh | awk -F ' ' '{print int($2)}' | wc -l)
-if [ "$gpuCheckProcesses" -gt "0" ]; then
+gpuCheckProcesses=$(ps aux | grep [g]pucheck | awk -F ' ' '{print int($2)}' | wc -l)
+if [ "$gpuCheckProcesses" -gt "2" ]; then
     echo "previous gpucheck process still running... exit"
 
     exit 0
@@ -86,17 +102,25 @@ if [ "$gpusFound" -lt "$numberOfGPUs" ]; then
   exit 0
 fi
 
-
 ## check if memory overclock is still effective
 ## check if power consumption is within range
 monitorMemoryPower() {
-  for i in $(seq 1 $numberOfGPUs); do
-    memoryRate=$(nvidia-settings -c :0 -t -q [gpu:$i]/GPUMemoryTransferRateOffset)
-    powerDraw=$(nvidia-smi -i $i -q -d POWER | grep "Power Draw" | awk -F ' ' '{print int($4)}')
+  gpuIndex=0
+	while [[ $gpuIndex -lt $gpuCount ]]
+	do
+    memoryRate=$(nvidia-settings -c :0 -t -q [gpu:$gpuIndex]/GPUMemoryTransferRateOffset)
+    powerDraw=$(nvidia-smi -i $gpuIndex -q -d POWER | grep "Power Draw" | awk -F ' ' '{print int($4)}')
 
-    echo "GPU $i"
+    echo "GPU $gpuIndex"
     echo "memoryRate: $memoryRate"
     echo "powerDraw: $powerDraw"
+
+    # for some reason GPU setting have been reset, apply them again
+    if [ "$memoryRate" -lt "$memoryTransferRateTarget" ]; then
+      echo "for some reason GPU setting have been reset, apply them again"
+      ./stable.sh
+      exit 0
+    fi
 
     # if power draw is above threshold, then GPU setting have been reset, apply them again
     if [ "$powerDraw" -gt "$powerDrawUpperLimit" ]; then
@@ -112,7 +136,7 @@ monitorMemoryPower() {
       #see if miner restarts successfully and resets the GPU
       sleep 50
 
-      powerDraw=$(nvidia-smi -i $i -q -d POWER | grep "Power Draw" | awk -F ' ' '{print int($4)}')
+      powerDraw=$(nvidia-smi -i $gpuIndex -q -d POWER | grep "Power Draw" | awk -F ' ' '{print int($4)}')
       # if power draw is still below, then the miner could not restart. restart the system
       if [ "$powerDraw" -lt "$powerDrawLowerLimit" ]; then
         echo "kill miner"
@@ -125,12 +149,7 @@ monitorMemoryPower() {
 
     fi
 
-    # for some reason GPU setting have been reset, apply them again
-    if [ "$memoryRate" -lt "$memoryTransferRateTarget" ]; then
-      echo "for some reason GPU setting have been reset, apply them again"
-      ./stable.sh
-      exit 0
-    fi
+    ((gpuIndex = gpuIndex + 1))
 
   done
 }
@@ -140,14 +159,12 @@ monitorMemoryPower
 ## automatically set fan speed to reach target temperature
 monitorTemperature() {
 
-	gpuCount=$(nvidia-smi --query-gpu=gpu_name --format=csv,noheader | wc -l)
-
 	gpuIndex=0
 	while [[ $gpuIndex -lt $gpuCount ]]
 	do
 	    gpuTemperature=$(nvidia-smi -i $gpuIndex -q -d TEMPERATURE | grep "GPU Current Temp" | awk -F ' ' '{print int($5)}')
-		gpuCurrentFanSpeed=$(nvidia-settings -c :0 -t -q [fan:$gpuIndex]/GPUCurrentFanSpeed)
-		gpuNewFanSpeed=$gpuCurrentFanSpeed
+      gpuCurrentFanSpeed=$(nvidia-settings -c :0 -t -q [fan:$gpuIndex]/GPUCurrentFanSpeed)
+      gpuNewFanSpeed=$gpuCurrentFanSpeed
 
 	    if [ "$gpuTemperature" -gt "$temperatureTarget" ]; then
 	    	echo "GPU temp $gpuTemperature > target temp $temperatureTarget... increasing fan speed +1"
@@ -163,9 +180,9 @@ monitorTemperature() {
 
 	    if [ "$gpuNewFanSpeed" -ne "$gpuCurrentFanSpeed" ]; then
 	    	nvidia-settings -c :0 -a [gpu:$gpuIndex]/GPUFanControlState=1 -a [fan:$gpuIndex]/GPUTargetFanSpeed=$gpuNewFanSpeed
-		fi
+		  fi
 
-	    ((gpuIndex = gpuIndex + 1))
+      ((gpuIndex = gpuIndex + 1))
 	done
 
 }
