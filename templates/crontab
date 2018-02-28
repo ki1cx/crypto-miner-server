@@ -1,0 +1,9 @@
+# run in UTC
+CRON_TZ=UTC
+
+@reboot cd /var/lib/claymore-dual-miner && ./mine.sh
+
+*/3 * * * * cd /var/lib/claymore-dual-miner && touch gpucheck.log && ./gpucheck.sh >> gpucheck.log 2>&1
+0 23 * * * > /var/lib/claymore-dual-miner/gpucheck.log
+0 23 * * * > /var/lib/claymore-dual-miner/m.log
+0 23 * * * > /var/lib/claymore-dual-miner/remove_mining_fees_log.txt
