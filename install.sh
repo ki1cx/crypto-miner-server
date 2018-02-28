@@ -6,7 +6,7 @@ set -e
 ##======================================
 powerDrawTarget=75
 temperatureTarget=58
-memoryTransferRateTarget=$2
+memoryTransferRateTarget=1300
 numberOfGPUs=8
 minimumHashRate=22
 startingFanSpeed=50
