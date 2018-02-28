@@ -125,6 +125,8 @@ The GTX 1070s is a clear winner when it comes to mining Ethereum.
 
 ### Controling the fan speed
 
+In order to control the fan speed, you'll need to set manual mode, which means the GPU will no longer automatically adjust the fan speed to the changing temperature. Make sure you are frequently running the custom script that adjusts the fan speed included in the repo or a custom script of your own.
+
 ```bash
 //set fan speed across all GPUs
 nvidia-settings -c :0 -a GPUFanControlState=1 -a GPUTargetFanSpeed=50
