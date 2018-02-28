@@ -2,7 +2,7 @@
 
 wirelessLogicalName={{wirelessLogicalName}}
 
-ifconfig $wirelessLogicalName
+/sbin/ifconfig $wirelessLogicalName
 
 if [ "$?" = "1" ]; then
 	echo "wifi not good... reinstall"
