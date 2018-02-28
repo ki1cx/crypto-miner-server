@@ -2,6 +2,7 @@
 set -e
 
 projectPath=$(pwd)
+claymorePath=/var/lib/claymore-dual-miner
 
 ##add-apt-repository
 apt-get -y install software-properties-common python-software-properties
@@ -43,8 +44,8 @@ echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config
 nvidia-xconfig --enable-all-gpus -a --allow-empty-initial-configuration --cool-bits=28
 
 ##install claymore miner
-mkdir -p /var/lib/claymore-dual-miner
-cd /var/lib/claymore-dual-miner
+mkdir -p $claymorePath
+cd $claymorePath
 wget https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v10.0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.0.-.LINUX.tar.gz
 tar -xvf Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.0.-.LINUX.tar.gz
 
@@ -54,19 +55,22 @@ epoolsFile=epools.txt
 cp $projectPath/templates/$epoolsFile .
 sed -i "s@{{eth_wallet_address}}@$ethWalletAddress@g" $epoolsFile
 
-mkdir -p $projectPath/scripts
-cp $projectPath/check.sh $projectPath/scripts/
-cp $projectPath/gpucheck.sh $projectPath/scripts/
-cp $projectPath/kill.sh $projectPath/scripts/
-cp $projectPath/mine.sh $projectPath/scripts/
-cp $projectPath/stable.sh $projectPath/scripts/
-cp $projectPath/remove_mining_fees.py $projectPath/scripts/
+mkdir -p $claymorePath/scripts
+cp $projectPath/templates/check.sh $claymorePath/scripts/
+cp $projectPath/templates/gpucheck.sh $claymorePath/scripts/
+cp $projectPath/templates/kill.sh $claymorePath/scripts/
+cp $projectPath/templates/mine.sh $claymorePath/scripts/
+cp $projectPath/templates/stable.sh $claymorePath/scripts/
+cp $projectPath/templates/remove_mining_fees.py $claymorePath/scripts/
+
+chmod +x $claymorePath/scripts/*.sh
+chmod +x $claymorePath/scripts/*.py
 
 ##install cron for monitoring
-cronFile=$projectPath/crontab
+cronFile=$claymorePath/scripts/crontab
+cp $projectPath/templates/crontab $cronFile
+sed -i "s@{{claymore_path}}@$claymorePath@g" $cronFile
 crontab "$cronFile"
-
-
 
 read -p "system needs to restart, restart now?" -n 1 -r
 echo ""
