@@ -9,7 +9,7 @@ temperatureTarget=58
 memoryTransferRateTarget=1300
 numberOfGPUs=8
 minimumHashRate=22
-startingFanSpeed=50
+startingFanSpeed=80
 
 read -ep " please enter your ethereum wallet address: " -i "" ethWalletAddress
 
