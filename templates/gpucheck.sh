@@ -72,7 +72,7 @@ fi
 
 ## check if gpu check is still running
 gpuCheckProcesses=$(ps aux | grep [g]pucheck | awk -F ' ' '{print int($2)}' | wc -l)
-if [ "$gpuCheckProcesses" -gt "2" ]; then
+if [ "$gpuCheckProcesses" -gt "3" ]; then
     echo "previous gpucheck process still running... exit"
 
     exit 0
