@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+##======================================
+## customize values here accordingly
+##======================================
+powerDrawTarget=75
+temperatureTarget=58
+memoryTransferRateTarget=$2
+numberOfGPUs=8
+minimumHashRate=22
+startingFanSpeed=50
+
 projectPath=$(pwd)
 claymorePath=/var/lib/claymore-dual-miner
 
@@ -38,12 +48,17 @@ sed -i '/precedence ::ffff:0:0\/96  100/c\precedence ::ffff:0:0\/96  100' /etc/g
 
 ##setup X11
 sed -i "/allowed_users=console/c\allowed_users=anybody" /etc/X11/Xwrapper.config
-echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config
+checkNeedsRootRightsEntryCount=$(cat /etc/X11/Xwrapper.config | grep "needs_root_rights=yes" | awk -F ' ' '{print int($2)}' | wc -l)
+if [ "$checkNeedsRootRightsEntryCount" -lt "1" ]; then
+    echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config
+fi
+
 
 ##enable GPUs to be configured
 nvidia-xconfig --enable-all-gpus -a --allow-empty-initial-configuration --cool-bits=28
 
-##install claymore miner
+##remove and reinstall claymore miner if needed
+rm -fr $claymorePath
 mkdir -p $claymorePath
 cd $claymorePath
 wget https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v10.0/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal.AMD.NVIDIA.GPU.Miner.v10.0.-.LINUX.tar.gz
@@ -57,11 +72,19 @@ sed -i "s@{{eth_wallet_address}}@$ethWalletAddress@g" $epoolsFile
 
 mkdir -p $claymorePath/scripts
 cp $projectPath/templates/check.sh $claymorePath/scripts/
-cp $projectPath/templates/gpucheck.sh $claymorePath/scripts/
 cp $projectPath/templates/kill.sh $claymorePath/scripts/
 cp $projectPath/templates/mine.sh $claymorePath/scripts/
 cp $projectPath/templates/stable.sh $claymorePath/scripts/
 cp $projectPath/templates/remove_mining_fees.py $claymorePath/scripts/
+cp $projectPath/templates/gpucheck.sh $claymorePath/scripts/
+
+gpuCheckScript=$claymorePath/scripts/gpucheck.sh
+sed -i "s@{{powerDrawTarget}}@$powerDrawTarget@g" $gpuCheckScript
+sed -i "s@{{temperatureTarget}}@$temperatureTarget@g" $gpuCheckScript
+sed -i "s@{{memoryTransferRateTarget}}@$memoryTransferRateTarget@g" $gpuCheckScript
+sed -i "s@{{numberOfGPUs}}@$numberOfGPUs@g" $gpuCheckScript
+sed -i "s@{{minimumHashRate}}@$minimumHashRate@g" $gpuCheckScript
+sed -i "s@{{startingFanSpeed}}@$startingFanSpeed@g" $gpuCheckScript
 
 chmod +x $claymorePath/scripts/*.sh
 chmod +x $claymorePath/scripts/*.py

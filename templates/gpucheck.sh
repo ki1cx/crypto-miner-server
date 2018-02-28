@@ -1,12 +1,14 @@
 #!/bin/bash
 
-## customize values here accordingly
-temperatureTarget=58
-memoryTransferRateTarget=1300
-powerDrawLowerLimit=60
-powerDrawUpperLimit=100
-numberOfGPUs=8
-minimumHashRate=22
+powerDrawTarget={{powerDrawTarget}}
+temperatureTarget={{temperatureTarget}}
+memoryTransferRateTarget={{temperatureTarget}}
+numberOfGPUs={{numberOfGPUs}}
+minimumHashRate={{minimumHashRate}}
+startingFanSpeed={{startingFanSpeed}}
+
+powerDrawLowerLimit=$((powerDrawTarget-10))
+powerDrawUpperLimit=$((powerDrawTarget+10))
 lowHashRateCountThreshold=20
 cannotConnectCountThreshold=5
 
@@ -14,8 +16,12 @@ claymoreMinerDir=/var/lib/claymore-dual-miner
 
 date
 echo ""
+echo "numberOfGPUs: $numberOfGPUs"
+echo "minimumHashRate: $minimumHashRate"
+echo "startingFanSpeed: $startingFanSpeed"
 echo "temperatureTarget: $temperatureTarget"
 echo "memoryTransferRateTarget: $memoryTransferRateTarget"
+echo "powerDrawTarget: $powerDrawTarget"
 echo "powerDrawLowerLimit: $powerDrawLowerLimit"
 echo "powerDrawUpperLimit: $powerDrawUpperLimit"
 
@@ -118,14 +124,14 @@ monitorMemoryPower() {
     # for some reason GPU setting have been reset, apply them again
     if [ "$memoryRate" -lt "$memoryTransferRateTarget" ]; then
       echo "for some reason GPU setting have been reset, apply them again"
-      ./stable.sh
+      ./stable.sh $powerDrawTarget $memoryTransferRateTarget $startingFanSpeed
       exit 0
     fi
 
     # if power draw is above threshold, then GPU setting have been reset, apply them again
     if [ "$powerDraw" -gt "$powerDrawUpperLimit" ]; then
       echo "for some reason GPU setting have been reset, apply them again"
-      ./stable.sh
+      ./stable.sh $powerDrawTarget $memoryTransferRateTarget $startingFanSpeed
       exit 0
     fi
 
