@@ -2,7 +2,7 @@
 
 powerDrawTarget={{powerDrawTarget}}
 temperatureTarget={{temperatureTarget}}
-memoryTransferRateTarget={{temperatureTarget}}
+memoryTransferRateTarget={{memoryTransferRateTarget}}
 numberOfGPUs={{numberOfGPUs}}
 minimumHashRate={{minimumHashRate}}
 startingFanSpeed={{startingFanSpeed}}
