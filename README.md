@@ -10,40 +10,6 @@ Tested on Ubuntu 16.04 Server LTS amd64 Xenial Xerus. Setup with [ubuntu-unatten
 
 * Clean Ubuntu server install
 
-## Optional
-
-* USB Wifi adapter
-
-## Usage
-
-* Edit install.sh and customize the following variables
-
-	```bash
-	powerDrawTarget=75
-	temperatureTarget=58
-	memoryTransferRateTarget=$2
-	numberOfGPUs=8
-	minimumHashRate=22
-	startingFanSpeed=50
-	```
-
-* Run install.sh
-
-	This installs all the packages necessary to run the miner, including Nvidia drivers
-	
-	```
-	sudo ./install.sh
-	```
-
-* Install USB Wifi driver and enable
-	
-	If you are using the Wifi adapater mentioned below. This installs the rtl8812AU driver.
-
-	```
-	sudo ./setup_usb_wireless.sh
-	```
-
-
 ## Hardware List
 
 Here is the list of hardware that I've use to build the rig. 
@@ -54,7 +20,7 @@ Here is the list of hardware that I've use to build the rig.
 
 * **Memory** - CORSAIR Vengeance LPX 8GB (2x4GB) DDR4 DRAM 3000MHz C15 Memory Kit - Black [CMK8GX4M2B3000C15](https://www.amazon.com/gp/product/B0123ZBPDA/) (only need a single 4GB)
 
-* **Power Supply** - Corsair RMx Series, 850W, Fully Modular Power Supply, 80+ Gold Certified [RM850x](https://www.amazon.com/dp/B015YEI8JG)
+* **Power Supply** (PSU) - Corsair RMx Series, 850W, Fully Modular Power Supply, 80+ Gold Certified [RM850x](https://www.amazon.com/dp/B015YEI8JG)
 
 * **SSD** - Transcend 64 GB SATA III MTS600 60 mm M.2 SSD [TS64GMTS600](https://www.amazon.com/gp/product/B00KLTPVJ0)
 
@@ -63,6 +29,104 @@ Here is the list of hardware that I've use to build the rig.
 * **PCIe Risers** - [MintCell](https://www.amazon.com/gp/product/B06ZY2R85P) 6-Pack PCIe 6-Pin 16x to 1x Powered Riser Adapter Card w/ 60cm USB 3.0 Extension Cable & 6-Pin PCI-E to SATA Power Cable 
 
 * **GPU** - Nvidia GTX 10 series GPUs
+
+## Optional
+
+* USB Wifi adapter
+
+## On System Setup
+
+1. Setup your base system (Motherboard , CPU, Memory, PSU, SSD) first.
+
+2. Install Ubuntu Server. You can use the unattended setup detailed [here](https://github.com/ki1cx/ubuntu-unattended).
+
+	Before installing Ubuntu, make sure your BIOS settings are as follows.
+	
+	* PEG0 - Max Link Speed - [Auto]
+	* PEG1 - Max Link Speed - [Auto]
+	* Above 4G memory/Crypto Currency mining - [Disabled]
+	
+		<img src="images/pre_gpu_bios_1.png" alt="open air" width="400px"/>
+	
+	* Initial Graphics Adapter - [PEG]
+	
+		<img src="images/pre_gpu_bios_2.png" alt="open air" width="400px"/>
+		
+	* Restore after AC Power Loss - [Power On]
+	
+		<img src="images/pre_gpu_bios_3.png" alt="open air" width="400px"/>
+		
+	* Disable all the settings on this screen
+	
+		<img src="images/pre_gpu_bios_4.png" alt="open air" width="400px"/>
+
+	* Enable all the settings on this screen
+	
+		<img src="images/pre_gpu_bios_5.png" alt="open air" width="400px"/>
+	
+3. Git clone this repo
+
+	* Edit install.sh and customize the following variables
+	
+		```bash
+		powerDrawTarget=75
+		temperatureTarget=58
+		memoryTransferRateTarget=1300
+		numberOfGPUs=8
+		minimumHashRate=22
+		startingFanSpeed=50
+		```
+	
+	* Run install.sh
+	
+		This installs all the packages necessary to run the miner, including Nvidia drivers and cronjobs to automatically monitor the GPUs to maintain the proper powerdraw, temperature and hashrate.
+		
+		```
+		sudo ./install.sh
+		```
+4. Turn system off completely, and install GPUS to the motherboard.
+
+5. Go into BIOS and 
+
+	* PEG0 - Max Link Speed - [Gen2]
+	* PEG1 - Max Link Speed - [Gen2]
+	* Above 4G memory/Crypto Currency mining - [Enabled]
+	
+		<img src="images/post_gpu_bios_1.png" alt="open air" width="400px"/>
+		
+	* Initial Graphics Adapter - [IGD]
+	
+		<img src="images/post_gpu_bios_2.png" alt="open air" width="400px"/>
+
+6. Turn system back on
+
+	Run the following command to check that your GPUs are recognized by the system. This is enough to get the miner to work with the GPUs.
+
+	```bash
+	nvidia-smi
+	```
+	
+	Run the following command to check if X server can recognize the GPUs. This is required for overclocking.
+	
+	```bash
+	XAUTHORITY=$(ps aux | grep [a]uth | awk '{print $17}')
+	export XAUTHORITY
+	export DISPLAY=:0
+	nvidia-xconfig --query-gpu-info
+	```
+
+7. Plugin the USB Wifi Adapter to the motherboard
+
+	USB Wifi Adapter is the last to be installed, because if installed first, the motherboard cannot detect the GPUs properly.
+
+	* Install USB Wifi driver and enable
+		
+		If you are using the Wifi adapater mentioned below. This installs the rtl8812AU driver.
+	
+		```
+		sudo ./setup_usb_wireless.sh
+		```
+
 
 ## On GPU selection
 
@@ -76,17 +140,17 @@ I chose to use Nvidia as opposed to AMD. From my research, Nvidia is much easier
 
 | Cooling | Example | Pros | Cons |
 |---|---|---|---|
-|  Open-Air  |  <img src="https://images-na.ssl-images-amazon.com/images/I/71QpPE6HUxL._SX522_.jpg" alt="open air" style="width: 200px;"/> [^1] | quiet, greater supply | dust accumulation, distributor markup |
-| Closed / Blower  |   <img src="https://images-na.ssl-images-amazon.com/images/I/41jAgpWLOoL.jpg" alt="blow style" style="width: 200px;"/> [^2]  | solid construction, directed air flow, fixed price when purchased from manufacturer | noisy |
-| Closed / Water-Cooled  |   <img src="https://thumbor.forbes.com/thumbor/960x0/smart/https%3A%2F%2Fblogs-images.forbes.com%2Fmarcochiappetta%2Ffiles%2F2015%2F05%2Fevga-titan.jpg" alt="blow style" style="width: 200px;"/> [^3]  | solid construction, directed air flow, silent | expensive |
+|  Open-Air  |  <img src="https://images-na.ssl-images-amazon.com/images/I/71QpPE6HUxL._SX522_.jpg" alt="open air" width="200px"/> [^1] | quiet, greater supply | dust accumulation, distributor markup |
+| Closed / Blower  |   <img src="https://images-na.ssl-images-amazon.com/images/I/41jAgpWLOoL.jpg" alt="blow style" width="200px"/> [^2]  | solid construction, directed air flow, fixed price when purchased from manufacturer | noisy |
+| Closed / Water-Cooled  |   <img src="https://thumbor.forbes.com/thumbor/960x0/smart/https%3A%2F%2Fblogs-images.forbes.com%2Fmarcochiappetta%2Ffiles%2F2015%2F05%2Fevga-titan.jpg" alt="blow style" width="200px"/> [^3]  | solid construction, directed air flow, silent | expensive |
 	
 I have tried the first two mentioned in the above table. If you are going to have a single rig of ~ 6 GPUS running in your bedroom, then the open air design will keep the noise down, because the fan does not have to run as fast compared to the closed air (blower) design. 
 	
-<img src="http://cdn.shopify.com/s/files/1/1952/1205/products/DSC_0030_1024x1024.jpg" alt="open air" style="width: 200px;"/>
+<img src="http://cdn.shopify.com/s/files/1/1952/1205/products/DSC_0030_1024x1024.jpg" alt="open air" width="200px"/>
 	
 If you are planning on a larger operation with ~ 100s of GPUs... then you'll probably want the blower style GPUs so you can carefuly direct the heat away from the heat sensitive components. 
 	
-<img src="https://i.pinimg.com/736x/fe/e8/94/fee894f88897840885e4bd36d6b4420e--rigs.jpg" alt="open air" style="width: 200px;"/>
+<img src="https://i.pinimg.com/736x/fe/e8/94/fee894f88897840885e4bd36d6b4420e--rigs.jpg" alt="open air" width="200px"/>
 
 ### Where to buy
 
