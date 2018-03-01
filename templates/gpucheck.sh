@@ -7,6 +7,7 @@ numberOfGPUs={{numberOfGPUs}}
 minimumHashRate={{minimumHashRate}}
 startingFanSpeed={{startingFanSpeed}}
 
+hashRateLowerLimit=$((minimumHashRate-1))
 powerDrawLowerLimit=$((powerDrawTarget-10))
 powerDrawUpperLimit=$((powerDrawTarget+10))
 lowHashRateCountThreshold=20
@@ -197,8 +198,10 @@ monitorTemperature
 
 ## check for irregular hashrate
 ## if low, then restart
-lowHashRateCount=$(grep -rn m.log -e "GPU. $minimumHashRate" | wc -l)
+lowHashRateCount=$(grep -rn m.log -e "GPU. $hashRateLowerLimit" | wc -l)
 if [ "$lowHashRateCount" -gt "$lowHashRateCountThreshold" ]; then
+  grep -rn m.log -e "GPU. $hashRateLowerLimit"
+
 	echo "hashrate is not optimal, instead of applying GPU settings again (which could get stuck), restart the server"
 
 	echo "kill miner"
