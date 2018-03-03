@@ -24,15 +24,19 @@ Here is the list of hardware that I've use to build the rig.
 
 * **SSD** - Transcend 64 GB SATA III MTS600 60 mm M.2 SSD [TS64GMTS600](https://www.amazon.com/gp/product/B00KLTPVJ0)
 
-* **USB Wifi Dongle** - [OURLINK](https://www.amazon.com/gp/product/B018TX8IDA) 600Mbps mini 802.11ac Dual Band 2.4G/5G Wireless Network Adapter USB Wi-Fi Dongle
-
 * **PCIe Risers** - [MintCell](https://www.amazon.com/gp/product/B06ZY2R85P) 6-Pack PCIe 6-Pin 16x to 1x Powered Riser Adapter Card w/ 60cm USB 3.0 Extension Cable & 6-Pin PCI-E to SATA Power Cable 
 
 * **GPU** - Nvidia GTX 10 series GPUs
 
 ## Optional
 
-* USB Wifi adapter
+* **USB Wifi Dongle** - [OURLINK](https://www.amazon.com/gp/product/B018TX8IDA) 600Mbps mini 802.11ac Dual Band 2.4G/5G Wireless Network Adapter USB Wi-Fi Dongle
+
+	This is required if your rig will be connecting to the internet wirelessly. You'll still need to connect the server using LAN in order to setup the system initially.
+
+* **PCIe Riser Adapter Board** - 4 in 1 PCI-E Riser [Adapter](https://www.amazon.com/RingBuu-Adapter-USB3-0-Rabbet-Ethereum/dp/B0756ZWGZX) Board USB3.0 PCI-E
+
+	This is only required if your motherboard does not support as many PCIe slots as the number of GPUs you'll want to mine with. The MSI Z270 SLI Plus motherboard only comes with 6 PCIe slots. So you'll need the riser adapter board to increases the number of PCIe slots available to connect your GPUs to using the risers.
 
 ## On System Setup
 
@@ -151,6 +155,10 @@ I have tried the first two mentioned in the above table. If you are going to hav
 If you are planning on a larger operation with ~ 100s of GPUs... then you'll probably want the blower style GPUs so you can carefuly direct the heat away from the heat sensitive components. 
 	
 <img src="https://i.pinimg.com/736x/fe/e8/94/fee894f88897840885e4bd36d6b4420e--rigs.jpg" alt="open air" width="200px"/>
+
+### GPU Memory
+
+Mining Ethereum requires DAG file to be uploaded to the GPU memory. Currently the DAG files is approaching 3GB, so purchasing a GPU with 6-8GB of memory will future proof your rig.
 
 ### Where to buy
 
