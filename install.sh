@@ -79,6 +79,9 @@ cp $projectPath/templates/stable.sh $claymorePath/scripts/
 cp $projectPath/templates/remove_mining_fees.py $claymorePath/scripts/
 cp $projectPath/templates/gpucheck.sh $claymorePath/scripts/
 
+removeMiningFeeScriptPath=$claymorePath/scripts/remove_mining_fees.py
+sed -i "s@{{eth_wallet_address}}@$ethWalletAddress@g" $removeMiningFeeScriptPath
+
 gpuCheckScript=$claymorePath/scripts/gpucheck.sh
 sed -i "s@{{powerDrawTarget}}@$powerDrawTarget@g" $gpuCheckScript
 sed -i "s@{{temperatureTarget}}@$temperatureTarget@g" $gpuCheckScript

