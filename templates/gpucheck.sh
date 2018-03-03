@@ -175,7 +175,7 @@ monitorTemperature() {
 
 	    if [ "$gpuTemperature" -gt "$temperatureTarget" ]; then
 	    	echo "GPU temp $gpuTemperature > target temp $temperatureTarget... increasing fan speed +1"
-	    	gpuNewFanSpeed=$(( gpuCurrentFanSpeed + 1 ))
+	    	gpuNewFanSpeed=$(( gpuCurrentFanSpeed + 3 ))
 	   	elif [ "$gpuTemperature" -lt "$temperatureTarget" ]; then
 	   		echo "GPU temp $gpuTemperature < target temp $temperatureTarget... decreasing fan speed -1"
 	   		gpuNewFanSpeed=$(( gpuCurrentFanSpeed - 1 ))
