@@ -183,7 +183,7 @@ Here is what I found to work in giving me a boost while remaining stable. I have
 
 ### Controlling Power Draw
 
-Giving the GPU enough is a crucial step in stablizing the GPU
+Giving the GPU enough power is a crucial step in stablizing the GPU
 
 ```bash
 //set persistence mode on
@@ -195,7 +195,7 @@ nvidia-smi -pl 75
 
 The following chart shows the power limit I've used to stablize the GPUMemoryTransferRateOffset used above.
 
-| GPU | Power Limit |
+| GPU | Power Limit (Watts) |
 |---|---|
 | 1060 | 75 | 
 | 1070 | 100 | 
@@ -222,6 +222,28 @@ nvidia-settings -c :0 -a GPUFanControlState=1 -a GPUTargetFanSpeed=50
 //should be replaced by the gpu you are targetting
 nvidia-settings -c :0 -a [gpu:<index>]/GPUFanControlState=1 -a [fan:<index>]/GPUTargetFanSpeed=100
 ```
+
+## On Stability
+
+This deserves a section of it's own, since the success of your mining operation will be determined by how stable you can keep your system operating without interruption. Whenever the system hangs due to GPU crashes and has to be restarted manually, you are losing valuable mining time. The key ingredients to a stable system are:
+
+* Stable memory clock speed (finding the right power draw level is also a major factor here) 
+* Making sure the GPUs are operating within the range of 35 ~ 75°C. You can try to push towards 80°F, but it will affect the longevity of your GPU. Major factor will be the ambient temperature your rig is placed in.
+
+Manufacturer's recommended maximum GPU temperatures are typically above 100°C. However, this figure is for a typical gamer playing 2-3 hours a day. For mining 24/7, the upper limit is much lower.
+
+## Electricy Cost
+
+Mining is most profitable if you are able to operate 24/7. Before building the rig, one should investigate the cost of electricity in your area and what the options are to keep the cost down. For example, PG&E has several [plans](https://www.pge.com/en_US/residential/rate-plans/how-rates-work/find-my-best-rate-plan.page): 
+
+* [Tiered](https://www.pge.com/en_US/residential/rate-plans/rate-plan-options/tiered-base-plan/tiered-base-plan.page) Rate Plan (E-1)
+
+	This is a rate plan where the more electricity consumed relative to the baseline, the more you pay. If you are mining, then you will 100% of the time consume more electricity than the baseline, which is determined by electricity consumption in your area. This plan should be avoided, and if this is the only plan available in your area, then mining is not a viable option for you.
+
+* [TIME-OF-USE](https://www.pge.com/en_US/residential/rate-plans/rate-plan-options/time-of-use-base-plan/not-enrolled.page) (PEAK PRICING 3-8 P.M. WEEKDAYS) E-TOU-A, E-TOU-B
+
+	Both of these options have fixed pricing on electricity consumed depending on time of day. This plan is viable for mining, since rate is not a function of how much electricity consumed. Assuming a 24/7 mining operation, calculate how much it would cost per day by looking at the cost table.
+
 
 ## On USB Wifi Adapters
 
