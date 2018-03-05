@@ -37,10 +37,88 @@ Here is the list of hardware that I've use to build the rig.
 * **PCIe Riser Adapter Board** - 4 in 1 PCI-E Riser [Adapter](https://www.amazon.com/RingBuu-Adapter-USB3-0-Rabbet-Ethereum/dp/B0756ZWGZX) Board USB3.0 PCI-E
 
 	This is only required if your motherboard does not support as many PCIe slots as the number of GPUs you'll want to mine with. The MSI Z270 SLI Plus motherboard only comes with 6 PCIe slots. So you'll need the riser adapter board to increases the number of PCIe slots available to connect your GPUs to using the risers.
+	
+* **Dual PSU Power Supply Adapter** - 24-Pin ATX Motherboard Adapter Cable
+	
+* **Surge Protector Power Strip** - AmazonBasics 6-Outlet Surge Protector [Power Strip](https://www.amazon.com/gp/product/B00TP1C51M), 790 Joule
+
+* **Extension Cord** 25-Feet 3 Outlet [Extension Cord](https://www.amazon.com/gp/product/B075NPFTDJ), Kasonic UL Listed, 16 / 3 SJTW 3-Wire Grounded, 13 Amp 125 V 1625 Watts, Multi-Outlet Indoor/Outdoor
+
+## On PSU
+
+Choose a Power Supply Unit that delivers stable electricity at high efficiency. Corsiar has a efficiency [rating system](http://www.corsair.com/en-us/blog/2012/august/80-plus-platinum-what-does-it-mean-and-what-is-the-benefit-to-me). You'll need to calculate how much power your PSU is actually able to deliver by looking at the chart.
+
+
+||20% load|50% load|100% load|
+|---|---|---|---|
+|80 PLUS|80%|80%|80%|
+|80 PLUS Bronze|	82%|85%|82%|
+|80 PLUS Silver|	85%|88%|85%|
+|80 PLUS Gold|87%|90%|87%|
+|80 PLUS Platinum|90%|92%|89%|
+
+For example, if you have Corsair 850W 80+ Gold Certified and you are consuming 425W of power, then you fall under 50% load column, which delivers power at 90% efficiency. This means there is a loss of 10% (425W x 0.10 = 42.5W). To deliver 425W of power, it requires bandwidth of 425 + 42.5 = 467.5W.
+
+The base system will consume about 100 ~ 200 watts. Your GPUs will consume between 75 ~ 100 watts each if you follow my instructions.
+	
+| | Power Consumption (watts/hr) |
+|---|---|
+| Base | 100 ~ 200 | 
+| GPU | 75 ~ 100 | 
+
+
+#### Examples
+
+* System A - 8 GTX 1060	GPU rig - 800 watts/hr
+* System B - 8 GTX 1070 GPU rig - 1,000 watts/hr
+* System C - 10 GTX 1070 GPU rig - 1,200 watts/hr
+
+|System|Consumption (Watts)|PSU|Total Capacity (Watts)|Load|Efficiency|Loss|Loss in Watts|Total Capacity Needed|Viable|
+|---|---|---|---|---|---|---|---|---|---|
+|A|800|Corsair RMx 850W 80+ Gold Certified|850|100%|87%|13%|104|904||
+|A|800|Corsair RMx 1000W 80+ Gold Certified|1000|80%|87%|13%|104|904|✓|
+|B|1000|Corsair RMx 1000W 80+ Gold Certified|1000|100%|87%|13%|130|1130||
+|C|1200|Corsair RMx 1000W 80+ Gold Certified|1000|100%|87%|13%|156|1356||
+
+To build a rig to support as many GPUs as possible, you'll either need to purchase PSU with high capacity, which gets very expensive. Another option is to use multiple PSUs for a single motherboard setup.
+
+⚠️ Do keep in mind, that you'll probably want to pad the **Total Capacity Needed**, since operating any system under 100% load will cause unexpected behavior and shorten the longevity. Rigs have caught on fire due to overloading of PSUs and cables.
+
+## On Dual PSU
+
+Using multiple PSUs is actually cheaper than buying a single PSU of large capacity. This is where the **Dual PSU Power Supply Adapter** comes into play. 
+
+<img src="https://images-na.ssl-images-amazon.com/images/I/61eHannbHXL._SX522_.jpg" alt="open air" width="200px"/>
+
+|System|Consumption (Watts)|PSU|Price|Total Capacity (Watts)|Load|Efficiency|Loss|Loss in Watts|Total Capacity needed|Viable|
+|---|---|---|---|---|---|---|---|---|---|---|
+|B|1000|2 x Corsair RMx 750 80+ Gold Certified|2 x $110|1500|66%|87%|13%|130|1130|✓|
+|C|1200|2 x Corsair RMx 750 80+ Gold Certified|2 x $110|1500|80%|87%|13%|156|1356|✓|
+|C|1200|1 x Corsair AXi 1500 80+ [Titanium](http://www.corsair.com/en-us/company/press-release/corsair-ax1500i-the-worlds-first-1500-watt-80-plus-titanium-psu-now-available) Certified|1 x $450|1500|80%|94%|6%|72|1272|✓|
+
+The price difference between using a single GPU vs dual GPU is $450 - $220 = $230.
+
+## On Surge Protector
+
+Always use a power surge protector that is capable of delivery enough power from the wall to the PSU. Also make sure it has enough **Joules**, which indicates the amount of "hits" it can take. More the better. If you live in an area where electricity is not delivered stably from the energy provider, then you'll want a professional surge protector.
+
+The AmazonBasics 6-Outlet Surge Protector Power Strip can deliver 1875W and 790 Joules worth of protection.
+
+## On Extension Power Cables
+
+Cables come with various ratings. The cabled mentioned in the optional section have specifications such as:
+
+* 14 AWG
+* 16 / 3 SJTW
+
+Reference the following links carefully to determine if they meet your use case.
+
+* http://uswireandcable.com/glossary.html
+* https://en.wikipedia.org/wiki/Extension_cord
 
 ## On System Setup
 
-1. Setup your base system (Motherboard , CPU, Memory, PSU, SSD) first.
+1. Setup your base system (Motherboard, CPU, Memory, PSU, SSD) first.
 
 2. Install Ubuntu Server. You can use the unattended setup detailed [here](https://github.com/ki1cx/ubuntu-unattended).
 
