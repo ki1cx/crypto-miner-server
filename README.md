@@ -188,13 +188,20 @@ Reference the following links carefully to determine if they meet your use case.
 	nvidia-smi
 	```
 	
+	Run the following to register the GPUs and restart the system
+	```bash
+	nvidia-xconfig --enable-all-gpus -a --allow-empty-initial-configuration --cool-bits=28
+	```
+	
 	Run the following command to check if X server can recognize the GPUs. This is required for overclocking.
 	
 	```bash
 	XAUTHORITY=$(ps aux | grep [a]uth | awk '{print $17}')
 	export XAUTHORITY
 	export DISPLAY=:0
-	nvidia-xconfig --query-gpu-info
+	
+	#should turn off the GPU Logo
+	nvidia-settings -c :0 -a GPULogoBrightness=0
 	```
 
 7. Plugin the USB Wifi Adapter to the motherboard
