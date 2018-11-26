@@ -8,7 +8,7 @@ if [ -d "$wifiDriverPath" ]; then
   echo "already cloned"
 else
   cd /var/lib
-  git clone https://github.com/diederikdehaas/rtl8812AU.git
+  git clone -b driver-4.3.14 https://github.com/diederikdehaas/rtl8812AU.git
 fi
 
 cd $wifiDriverPath
