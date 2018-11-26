@@ -65,6 +65,8 @@ mkdir -p $claymorePath
 cd $claymorePath
 wget https://github.com/nanopool/Claymore-Dual-Miner/releases/download/v11.8/Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak.AMD.NVIDIA.GPU.Miner.v11.8.-.LINUX.tar.gz
 tar -xvf Claymore.s.Dual.Ethereum.Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak.AMD.NVIDIA.GPU.Miner.v11.8.-.LINUX.tar.gz
+mv Claymore*/* .
+rm -fr Claymore*
 
 ##setup claymore miner with wallet address
 epoolsFile=epools.txt
